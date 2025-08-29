@@ -1,0 +1,261 @@
+<!DOCTYPE ahtml>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz de Jornalismo</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 22px; 
+            padding: 20px;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #00aaff;
+            text-align: center;
+            font-size: 40px; 
+        }
+
+        .question {
+            background-color: #111;
+            border: 1px solid #00aaff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            background-color: #222;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        label.selected {
+            background-color: #00aaff;
+            color: #fff;
+        }
+
+        label:hover {
+            background-color: #333;
+        }
+        
+        button {
+            background-color: #00aaff;
+            color: white;
+            border: none;
+            padding: 14px 28px; 
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px; 
+        }
+
+        button:hover {
+            background-color: #0088cc;
+        }
+
+        #result {
+            font-size: 24px; 
+            margin-top: 20px;
+            color: #00ffcc;
+            text-align: center;
+        }
+
+        .icon {
+            position: fixed;
+            font-size: 48px;
+            animation: flutuar 6s linear infinite;
+            opacity: 0.5;
+            pointer-events: none;
+            text-shadow: 0 0 8px #00ffff, 0 0 12px #00aaff;
+            z-index: 0;
+        }
+
+        @keyframes flutuar {
+            0% { transform: translateY(-50px); }
+            100% { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Quiz de Jornalismo</h1>
+
+    <form id="quiz-form">
+        <div class="question">
+            <p>1. Qual é a principal função do jornalismo?</p>
+            <label><input type="radio" name="q1" value="a"> Informar com precisão e imparcialidade</label>
+            <label><input type="radio" name="q1" value="b"> Promover produtos comerciais</label>
+            <label><input type="radio" name="q1" value="c"> Criar conteúdo viral</label>
+            <label><input type="radio" name="q1" value="d"> Entreter o público</label>
+        </div>
+
+        <div class="question">
+            <p>2. O que significa “checagem de fatos”?</p>
+            <label><input type="radio" name="q2" value="a"> Criar notícias com base em rumores</label>
+            <label><input type="radio" name="q2" value="b"> Confirmar fontes de entretenimento</label>
+            <label><input type="radio" name="q2" value="c"> Verificar se uma notícia é popular</label>
+            <label><input type="radio" name="q2" value="d"> Verificar a veracidade das informações</label>
+        </div>
+
+        <div class="question">
+            <p>3. Qual é o papel da ética no jornalismo?</p>
+            <label><input type="radio" name="q3" value="a"> Garantir que o jornalista seja famoso</label>
+            <label><input type="radio" name="q3" value="b"> Proteger interesses comerciais</label>
+            <label><input type="radio" name="q3" value="c"> Guiar a conduta responsável e justa</label>
+            <label><input type="radio" name="q3" value="d"> Criar manchetes chamativas</label>
+        </div>
+
+        <div class="question">
+            <p>4. O que é uma fonte confiável?</p>
+            <label><input type="radio" name="q4" value="a"> Um perfil popular nas redes sociais</label>
+            <label><input type="radio" name="q4" value="b"> Alguém com conhecimento e credibilidade</label>
+            <label><input type="radio" name="q4" value="c"> Qualquer pessoa que queira falar</label>
+            <label><input type="radio" name="q4" value="d"> Um influenciador digital</label>
+        </div>
+
+        <div class="question">
+            <p>5. Qual é a diferença entre notícia e opinião?</p>
+            <label><input type="radio" name="q5" value="a"> Não há diferença</label>
+            <label><input type="radio" name="q5" value="b"> Opinião é sempre mais confiável</label>
+            <label><input type="radio" name="q5" value="c"> Notícia é baseada em sentimentos</label>
+            <label><input type="radio" name="q5" value="d"> Notícia apresenta fatos; opinião traz interpretações</label>
+        </div>
+
+        <div class="question">
+            <p>6. O que é liberdade de imprensa?</p>
+            <label><input type="radio" name="q6" value="a"> Direito de publicar qualquer coisa sem consequências</label>
+            <label><input type="radio" name="q6" value="b"> Controle total do governo sobre a mídia</label>
+            <label><input type="radio" name="q6" value="c"> Direito de informar sem censura ou repressão</label>
+            <label><input type="radio" name="q6" value="d"> Liberdade para promover marcas</label>
+        </div>
+
+        <button type="button" onclick="verificarRespostas()">Enviar</button>
+        <button type="button" id="retry" onclick="tentarNovamente()" style="display:none;">Tentar novamente</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // Emojis flutuando nas laterais da tela
+    let icones = ["📷", "🎙️", "📰", "🔍", "✏️", "📡"];
+    // Aumentando o número de emojis para 120 para maior frequência
+    for (let i = 0; i < 120; i++) {
+        let icon = document.createElement("div");
+        icon.className = "icon";
+        icon.textContent = icones[Math.floor(Math.random() * icones.length)];
+
+        let left;
+        let rand = Math.random();
+        // Faixa de queda dos emojis ampliada para cobrir mais a tela
+        const range = 300;
+        if (rand < 0.5) {
+            // Lado esquerdo
+            left = Math.random() * range;
+        } else {
+            // Lado direito
+            left = window.innerWidth - Math.random() * range;
+        }
+
+        icon.style.left = left + "px";
+        icon.style.top = Math.random() * window.innerHeight + "px";
+        icon.style.animationDuration = (4 + Math.random() * 4) + "s";
+        document.body.appendChild(icon);
+    }
+    
+    // Objeto com as respostas corretas
+    const respostasCorretas = {
+        q1: "a",
+        q2: "d",
+        q3: "c",
+        q4: "b",
+        q5: "d",
+        q6: "c"
+    };
+
+    // Função para verificar as respostas
+    function verificarRespostas() {
+        let acertos = 0;
+        const total = Object.keys(respostasCorretas).length;
+        const resultado = document.getElementById("result");
+        const botaoRetry = document.getElementById("retry");
+        
+        // Remove a classe 'selected' de todas as labels
+        document.querySelectorAll('label').forEach(label => {
+            label.classList.remove('selected');
+        });
+        
+        for (let i = 1; i <= total; i++) {
+            const resposta = document.querySelector(`input[name="q${i}"]:checked`);
+            
+            // Se uma resposta foi selecionada
+            if (resposta) {
+                // Adiciona a classe 'selected' à label da resposta selecionada
+                resposta.parentElement.classList.add('selected');
+                
+                if (resposta.value === respostasCorretas[`q${i}`]) {
+                    acertos++;
+                }
+            }
+        }
+        
+        // Exibe o resultado e o botão de tentar novamente
+        if (acertos === total) {
+            resultado.textContent = `🎉 Parabéns! Você acertou todas as ${total} perguntas. Você conseguiu!`;
+        } else {
+            resultado.textContent = `✅ Acertos: ${acertos} | ❌ Erros: ${total - acertos}`;
+        }
+        
+        botaoRetry.style.display = "inline-block";
+    }
+
+    // Função para tentar novamente
+    function tentarNovamente() {
+        const formulario = document.getElementById("quiz-form");
+        formulario.reset();
+        
+        const resultado = document.getElementById("result");
+        resultado.textContent = "";
+        
+        const botaoRetry = document.getElementById("retry");
+        botaoRetry.style.display = "none";
+        
+        // Remove a classe 'selected' de todas as labels
+        document.querySelectorAll('label').forEach(label => {
+            label.classList.remove('selected');
+        });
+        
+    }
+
+    // Adiciona evento para escurecer a alternativa selecionada
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            // Remove a classe 'selected' de todas as labels do mesmo grupo de rádio
+            document.querySelectorAll(`input[name="${event.target.name}"]`).forEach(input => {
+                input.parentElement.classList.remove('selected');
+            });
+            // Adiciona a classe 'selected' à label da alternativa clicada
+            event.target.parentElement.classList.add('selected');
+        });
+    });
+</script>
+
+</body>
+</html>
